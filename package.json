@@ -1,0 +1,14 @@
+{
+  "name": "marsbars",
+  "description": "templates",
+  "version": "0.0.0",
+  "author": "mike nicholaides <mike@ablegray.com>",
+  "repository": "git://github.com/nicholaides/marsbars",
+  "dependencies": {
+    "coffee-script": "*",
+    "underscore": "*"
+  },
+  "devDependencies": {
+    "jasmine-node":  "*"
+  }
+}
