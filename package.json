@@ -5,6 +5,7 @@
   "author": "mike nicholaides <mike@ablegray.com>",
   "repository": "git://github.com/nicholaides/marsbars",
   "dependencies": {
+    "pegjs": "*",
     "coffee-script": "*",
     "underscore": "*"
   },
