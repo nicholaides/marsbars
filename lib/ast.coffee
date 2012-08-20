@@ -6,14 +6,15 @@ class Node
     @setChildren children
     @setClassesAndId classesAndId
 
-  setChildren: (@children=[])-> @
-  setContents: (@contents=[])-> @
+  setChildren: (children)->
+    @children = []
+    _.each children, (child)=> @addChild child
+    @
 
   setClassesAndId: (@classesAndId=[])-> @
   getClassesAndId: -> @classesAndId
 
   setTagName: (@tagName)-> @
-  setContent: (@content)-> @
   setIndentation: (@indentation)->
     @indentation || ""
     @
@@ -41,7 +42,6 @@ class Node
 
 exports.Node = (args...)-> new Node args...
 
-
 class Class
   constructor: (@className)->
 
@@ -55,10 +55,16 @@ exports.Id = (args...)-> new Id args...
 
 
 
-class ContentNode
-  constructor: (@content)->
+class TextNode
+  constructor: (@text)->
 
-exports.ContentNode = (args...)-> new ContentNode args...
+  setParent: (@parent)->
+
+  getText: -> @text
+
+  map: (callback)-> callback @
+
+exports.TextNode = (args...)-> new TextNode args...
 
 
 exports.cleanInput = (input)->
@@ -76,6 +82,7 @@ setIndentLevels = (root, nodes)->
   indentStyle = null
 
   _.each nodes, (node)->
+    console.log(node) unless node.getIndentation?
     indentation = node.getIndentation()
     if indentation == ""
       node.indentLevel = 0
