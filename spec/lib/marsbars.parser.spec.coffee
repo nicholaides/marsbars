@@ -146,6 +146,11 @@ describe "Parser", ->
           AST.TextNode "Text"
         ]
       ]
+
+      [
+        "html(lang=\"en\")"
+        AST.Element "html", [], [], [AST.Attribute('lang', 'en')]
+      ]
     ]
 
     _.each tags, ([tagCode, expectedElement])->

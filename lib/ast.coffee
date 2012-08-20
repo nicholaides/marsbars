@@ -37,6 +37,10 @@ class Element
 
   setParent: (@parent)->
 
+  setAttributes: (@attributes)-> @
+  getAttributes: ()-> @attributes
+
+
   map: (callback)->
     [ callback(@), _.map(@children, (child)-> child.map(callback)) ]
 
@@ -52,6 +56,12 @@ class Id
   constructor: (@idName)->
 
 exports.Id = (args...)-> new Id args...
+
+
+class Attribute
+  constructor: (@attName, @attValue)->
+
+exports.Attribute = (args...)-> new Attribute args...
 
 
 
