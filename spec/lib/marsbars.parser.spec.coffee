@@ -151,6 +151,13 @@ describe "Parser", ->
         "html(lang=\"en\")"
         AST.Element "html", [], [], [AST.Attribute('lang', 'en')]
       ]
+      [
+        "html( lang=\"en\" version=\"4.0\" )"
+        AST.Element "html", [], [], [
+          AST.Attribute 'lang', 'en'
+          AST.Attribute 'version', '4.0'
+        ]
+      ]
     ]
 
     _.each tags, ([tagCode, expectedElement])->
