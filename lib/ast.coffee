@@ -1,6 +1,6 @@
 _ = require 'underscore'
 
-class Node
+class Element
   constructor: (tagName, classesAndId, children)->
     @setTagName tagName
     @setChildren children
@@ -40,7 +40,7 @@ class Node
   map: (callback)->
     [ callback(@), _.map(@children, (child)-> child.map(callback)) ]
 
-exports.Node = (args...)-> new Node args...
+exports.Element = (args...)-> new Element args...
 
 class Class
   constructor: (@className)->
@@ -64,6 +64,10 @@ class TextNode
 
   map: (callback)-> callback @
 
+  setIndentation: (@indentation)-> @
+  getIndentation: ()-> @indentation
+
+
 exports.TextNode = (args...)-> new TextNode args...
 
 
@@ -76,24 +80,24 @@ exports.cleanInput = (input)->
 exports.getIndentation = (input)->
   input.match(/^\s*/)[0]
 
-setIndentLevels = (root, nodes)->
+setIndentLevels = (root, elements)->
   root.indentLevel = 0
 
   indentStyle = null
 
-  _.each nodes, (node)->
-    console.log(node) unless node.getIndentation?
-    indentation = node.getIndentation()
+  _.each elements, (element)->
+    console.log(element) unless element.getIndentation?
+    indentation = element.getIndentation()
     if indentation == ""
-      node.indentLevel = 0
+      element.indentLevel = 0
     else
       indentStyle ?= new RegExp indentation, "g"
-      node.indentLevel = indentation.match(indentStyle).length
+      element.indentLevel = indentation.match(indentStyle).length
 
-# previous node's parent
+# previous element's parent
 
 #                    |        | Previous | Previous
-#                    | Indent | Indent   | Node's
+#                    | Indent | Indent   | Element's
 # Markup             | Level  | Level    | Parent
 #===================================================
 # html               | 0      |          |
@@ -102,19 +106,19 @@ setIndentLevels = (root, nodes)->
 #   body             | 1      | 2        | 2
 #     container      | 2      | 1        | 0
 #     othercontainer | 2      | 2        | 0
-exports.treeifyNodes = (root, subNodes)->
-  setIndentLevels root, subNodes
+exports.treeifyElements = (root, subElements)->
+  setIndentLevels root, subElements
 
-  previousNode = root
+  previousElement = root
 
-  _.each subNodes, (node)->
-    indentDifference = previousNode.indentLevel - node.indentLevel + 1
+  _.each subElements, (element)->
+    indentDifference = previousElement.indentLevel - element.indentLevel + 1
 
     throw "Indenting too far" if indentDifference < 0
 
-    previousNode.getParent(indentDifference).addChild node
+    previousElement.getParent(indentDifference).addChild element
 
-    previousNode = node
+    previousElement = element
 
   root
 
