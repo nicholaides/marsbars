@@ -6,6 +6,10 @@ class Element
     @setChildren children
     @setClassesAndId classesAndId
 
+  setIsRoot: ->
+    @isRoot = true
+    @
+
   setChildren: (children)->
     @children = []
     _.each children, (child)=> @addChild child
@@ -44,22 +48,62 @@ class Element
   map: (callback)->
     [ callback(@), _.map(@children, (child)-> child.map(callback)) ]
 
+  toHandlebars: ->
+    tagName = @tagName || 'div'
+
+    attributes = []
+
+    ids = []
+    ids.push classOrId.getId()    for classOrId in @classesAndId when classOrId.getId?
+    ids.push attribute.getValue() for attribute in @attributes   when attribute.getName() == 'id'
+    attributes.push ['id', ids[ids.length-1]] if ids.length > 0
+
+    classes = []
+    classes.push classOrId.getClassName() for classOrId in @classesAndId when classOrId.getClassName?
+    classes.push attribute.getValue()     for attribute in @attributes   when attribute.getName() == 'class'
+    attributes.push ['class', classes.join(' ')] if classes.length > 0
+
+    attributes.unshift [attribute.getName(), attribute.getValue()] for attribute in @attributes when attribute.getName() not in ['id', 'class']
+
+    childrenHandlebars = ( child.toHandlebars() for child in @children ).join("")
+
+    if @isRoot
+      childrenHandlebars = ( child.toHandlebars() for child in @children ).join("")
+    else
+      attributesHTML = ( "#{name}=\"#{value}\"" for [name, value] in attributes ).join(" ")
+
+      html = "<#{tagName}"
+      html += " " + attributesHTML if attributesHTML.length > 0
+
+      if @children.length == 0
+        html += " />"
+      else
+        html += ">"
+        html += childrenHandlebars
+        html += "</#{tagName}>"
+
+      html
+
 exports.Element = (args...)-> new Element args...
 
 class Class
   constructor: (@className)->
+  getClassName: -> @className
 
 exports.Class = (args...)-> new Class args...
 
 
 class Id
   constructor: (@idName)->
+  getId: -> @idName
 
 exports.Id = (args...)-> new Id args...
 
 
 class Attribute
   constructor: (@attName, @attValue)->
+  getName:  -> @attName
+  getValue: -> @attValue
 
 exports.Attribute = (args...)-> new Attribute args...
 
@@ -76,6 +120,9 @@ class TextNode
 
   setIndentation: (@indentation)-> @
   getIndentation: ()-> @indentation
+
+  toHandlebars: ->
+    @text
 
 
 exports.TextNode = (args...)-> new TextNode args...
