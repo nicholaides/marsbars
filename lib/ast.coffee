@@ -1,10 +1,11 @@
 _ = require 'underscore'
 
 class Element
-  constructor: (tagName, classesAndId, children)->
+  constructor: (tagName, classesAndId, children, attributes)->
     @setTagName tagName
     @setChildren children
     @setClassesAndId classesAndId
+    @setAttributes attributes
 
   setIsRoot: ->
     @isRoot = true
@@ -41,7 +42,10 @@ class Element
 
   setParent: (@parent)->
 
-  setAttributes: (@attributes)-> @
+  setAttributes: (attributes)->
+    @attributes = attributes || []
+    @
+
   getAttributes: ()-> @attributes
 
 

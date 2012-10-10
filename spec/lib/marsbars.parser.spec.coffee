@@ -173,7 +173,9 @@ describe "Parser", ->
           tag           : node.getTagName?()
           classesAndIds : node.getClassesAndId?()
           text          : node.getText?()
+          attributes    : node.getAttributes?().sort (a, b)-> a.getName().localeCompare b.getName()
 
       it "parses #{tagCode}", ->
-        element = parser.parse(tagCode)
-        expect( comparable(element) ).toEqual( comparable(expectedElement) )
+        given    = comparable parser.parse(tagCode)
+        expected = comparable expectedElement
+        expect( given ).toEqual expected
