@@ -1,5 +1,4 @@
 marsbars = require '../../lib/marsbars.js'
-domify   = require 'domify'
 _        = require 'underscore'
 
 describe ".compileToHandlebars", ->
