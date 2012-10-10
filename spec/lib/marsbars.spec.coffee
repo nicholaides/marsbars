@@ -93,6 +93,10 @@ describe ".compileToHandlebars", ->
       'html( lang="en" version="4.0" )'
       '<html lang="en" version="4.0" />'
     ]
+    [
+      'html= some.attribute'
+      '<html>{{some.attribute}}</html>'
+    ]
   ]
 
   indent = (markup)->

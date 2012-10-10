@@ -124,8 +124,16 @@ class TextNode
   toHandlebars: ->
     @text
 
-
 exports.TextNode = (args...)-> new TextNode args...
+
+
+class HBContent
+  constructor: (@content)->
+  setParent: (@parent)->
+  toHandlebars: -> "{{#{@content}}}"
+  map: (callback)-> callback @
+
+exports.HBContent = (args...)-> new HBContent args...
 
 
 exports.cleanInput = (input)->

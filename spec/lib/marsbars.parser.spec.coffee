@@ -158,6 +158,12 @@ describe "Parser", ->
           AST.Attribute 'version', '4.0'
         ]
       ]
+      [
+        "html= some.property"
+        AST.Element "html", [], [
+          AST.HBContent 'some.property'
+        ]
+      ]
     ]
 
     _.each tags, ([tagCode, expectedElement])->
