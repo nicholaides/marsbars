@@ -132,6 +132,8 @@ class HBContent
   setParent: (@parent)->
   toHandlebars: -> "{{#{@content}}}"
   map: (callback)-> callback @
+  setIndentation: (@indentation)-> @
+  getIndentation: ()-> @indentation
 
 exports.HBContent = (args...)-> new HBContent args...
 
