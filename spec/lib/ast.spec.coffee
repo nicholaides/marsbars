@@ -2,9 +2,9 @@ _      = require 'underscore'
 AST    = require '../../lib/ast.js'
 
 describe "cleanInput", ->
-  it "removes trailing whitespace from input", ->
-    input = "html  \nend\n"
-    expectedOutput = "html\nend"
+  it "removes excess trailing whitespace from input", ->
+    input = "html  \nend \n \n "
+    expectedOutput = "html\nend\n"
 
     output = AST.cleanInput input
 
@@ -12,7 +12,7 @@ describe "cleanInput", ->
 
   it "removes blank lines from input", ->
     input = "html  \n  \n  \nend  \n  \n  \n  "
-    expectedOutput = "html\nend"
+    expectedOutput = "html\nend\n"
 
     output = AST.cleanInput input
 
@@ -20,7 +20,7 @@ describe "cleanInput", ->
 
   it "retains indentation", ->
     input = "html\n  end"
-    expectedOutput = "html\n  end"
+    expectedOutput = "html\n  end\n"
 
     output = AST.cleanInput input
 

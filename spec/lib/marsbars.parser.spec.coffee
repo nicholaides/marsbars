@@ -146,7 +146,31 @@ describe "Parser", ->
           AST.TextNode "Text"
         ]
       ]
-
+      [
+        """
+        html
+          h1
+          h2
+        """
+        AST.Element "html", [], [
+          AST.Element "h1"
+          AST.Element "h2"
+        ]
+      ]
+      [
+        """
+        html
+          h1
+            h2
+            h3
+        """
+        AST.Element "html", [], [
+          AST.Element "h1", [], [
+            AST.Element "h2"
+            AST.Element "h3"
+          ]
+        ]
+      ]
       [
         "html(lang=\"en\")"
         AST.Element "html", [], [], [AST.Attribute('lang', 'en')]
@@ -162,6 +186,54 @@ describe "Parser", ->
         "html= some.property"
         AST.Element "html", [], [
           AST.HBContent 'some.property'
+        ]
+      ]
+      [
+        """
+        html
+          - view with arguments
+            div content
+        """
+        AST.Element "html", [], [
+          AST.HBBlock 'view', 'with arguments', [
+            AST.Element 'div', [], [AST.TextNode "content"]
+          ]
+        ]
+      ]
+      [
+        """
+        html
+          | content
+          | more content
+        """
+        AST.Element "html", [], [
+          AST.TextNode "content"
+          AST.TextNode "more content"
+        ]
+      ]
+      [
+        """
+        html
+          div content
+          div more content
+        """
+        AST.Element "html", [], [
+          AST.Element 'div', [], [AST.TextNode "content"]
+          AST.Element 'div', [], [AST.TextNode "more content"]
+        ]
+      ]
+      [
+        """
+        html
+          - view with arguments
+            div content
+            div more content
+        """
+        AST.Element "html", [], [
+          AST.HBBlock 'view', 'with arguments', [
+            AST.Element 'div', [], [AST.TextNode "content"]
+            AST.Element 'div', [], [AST.TextNode "more content"]
+          ]
         ]
       ]
     ]

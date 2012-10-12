@@ -1,6 +1,37 @@
 _ = require 'underscore'
 
-class Element
+class Node
+  setChildren: (children)->
+    @children = []
+    _.each children, (child)=> @addChild child
+    @
+
+  setIndentation: (@indentation)->
+    @indentation || ""
+    @
+
+  addChild: (child)->
+    @children.push child
+    child.setParent @
+
+  getChildren: -> @children
+
+  getIndentation: -> @indentation
+
+  getParent: (n)->
+    if n == 0
+      @
+    else
+      debugger if !@parent
+      @parent.getParent n-1
+
+  setParent: (@parent)->
+
+  map: (callback)->
+    [ callback(@), _.map(@children, (child)-> child.map(callback)) ]
+
+
+class Element extends Node
   constructor: (tagName, classesAndId, children, attributes)->
     @setTagName tagName
     @setChildren children
@@ -11,46 +42,17 @@ class Element
     @isRoot = true
     @
 
-  setChildren: (children)->
-    @children = []
-    _.each children, (child)=> @addChild child
-    @
-
   setClassesAndId: (@classesAndId=[])-> @
   getClassesAndId: -> @classesAndId
 
   setTagName: (@tagName)-> @
-  setIndentation: (@indentation)->
-    @indentation || ""
-    @
-
-  addChild: (child)->
-    @children.push child
-    child.setParent @
-
   getTagName: -> @tagName
-
-  getChildren: -> @children
-
-  getIndentation: -> @indentation
-
-  getParent: (n)->
-    if n == 0
-      @
-    else
-      @parent.getParent n-1
-
-  setParent: (@parent)->
 
   setAttributes: (attributes)->
     @attributes = attributes || []
     @
 
   getAttributes: ()-> @attributes
-
-
-  map: (callback)->
-    [ callback(@), _.map(@children, (child)-> child.map(callback)) ]
 
   toHandlebars: ->
     tagName = @tagName || 'div'
@@ -113,17 +115,8 @@ exports.Attribute = (args...)-> new Attribute args...
 
 
 
-class TextNode
+class TextNode extends Node
   constructor: (@text)->
-
-  setParent: (@parent)->
-
-  getText: -> @text
-
-  map: (callback)-> callback @
-
-  setIndentation: (@indentation)-> @
-  getIndentation: ()-> @indentation
 
   toHandlebars: ->
     @text
@@ -141,12 +134,22 @@ class HBContent
 
 exports.HBContent = (args...)-> new HBContent args...
 
+class HBBlock extends Node
+  constructor: (@helperMethod, @arguments, children)->
+    @setChildren children
+
+  toHandlebars: ->
+    childrenHandlebars = ( child.toHandlebars() for child in @children ).join("")
+    "{{##{@helperMethod} #{@arguments}}}#{childrenHandlebars}{{/#{@helperMethod}}}"
+
+exports.HBBlock = (args...)-> new HBBlock args...
+
 
 exports.cleanInput = (input)->
   lines = input.split "\n"
   lines = _.filter lines, (line)-> !line.match /^\s*$/
   lines = _.map lines,    (line)-> line.replace /\s+$/, ''
-  lines.join "\n"
+  lines.join("\n") + "\n"
 
 exports.getIndentation = (input)->
   input.match(/^\s*/)[0]

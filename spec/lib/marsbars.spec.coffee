@@ -104,6 +104,15 @@ describe ".compileToHandlebars", ->
       """
       '<html>{{some.attribute}}</html>'
     ]
+    [
+      """
+      html
+        - view and arguments
+          div contents
+      """
+      '<html>{{#view and arguments}}<div>contents</div>{{/view}}</html>'
+    ]
+
   ]
 
   indent = (markup)->
