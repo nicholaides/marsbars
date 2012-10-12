@@ -107,12 +107,29 @@ describe ".compileToHandlebars", ->
     [
       """
       html
+        = some.attribute
+        div other content
+      """
+      '<html>{{some.attribute}}<div>other content</div></html>'
+    ]
+    [
+      """
+      html
         - view and arguments
           div contents
       """
       '<html>{{#view and arguments}}<div>contents</div>{{/view}}</html>'
     ]
-
+    [
+      """
+      html
+        - if the.conditional
+          div IF
+        - else
+          div ELSE
+      """
+      '<html>{{#if the.conditional}}<div>IF</div>{{else}}<div>ELSE</div>{{/if}}</html>'
+    ]
   ]
 
   indent = (markup)->

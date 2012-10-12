@@ -1,6 +1,10 @@
 _ = require 'underscore'
 
-class Node
+class ASTNode
+  setIndentLevel: (@_indentLevel)->
+  getIndentLevel: -> @_indentLevel
+
+class Node extends ASTNode
   setChildren: (children)->
     @children = []
     _.each children, (child)=> @addChild child
@@ -123,15 +127,17 @@ class TextNode extends Node
 exports.TextNode = (args...)-> new TextNode args...
 
 
-class HBContent
+class HBContent extends ASTNode
   constructor: (@content)->
   setParent: (@parent)->
+  getParent: -> @parent
   toHandlebars: -> "{{#{@content}}}"
   map: (callback)-> callback @
   setIndentation: (@indentation)-> @
   getIndentation: ()-> @indentation
 
 exports.HBContent = (args...)-> new HBContent args...
+
 
 class HBBlock extends Node
   constructor: (@helperMethod, @arguments, children)->
@@ -144,6 +150,17 @@ class HBBlock extends Node
 exports.HBBlock = (args...)-> new HBBlock args...
 
 
+class HBElse extends HBContent
+  constructor: ->
+    @content = "else"
+
+  getIndentLevel: -> super() + 1
+
+exports.HBElse = (args...)-> new HBElse args...
+
+
+
+
 exports.cleanInput = (input)->
   lines = input.split "\n"
   lines = _.filter lines, (line)-> !line.match /^\s*$/
@@ -154,7 +171,7 @@ exports.getIndentation = (input)->
   input.match(/^\s*/)[0]
 
 setIndentLevels = (root, elements)->
-  root.indentLevel = 0
+  root.setIndentLevel 0
 
   indentStyle = null
 
@@ -162,10 +179,10 @@ setIndentLevels = (root, elements)->
     console.log(element) unless element.getIndentation?
     indentation = element.getIndentation()
     if indentation == ""
-      element.indentLevel = 0
+      element.setIndentLevel 0
     else
       indentStyle ?= new RegExp indentation, "g"
-      element.indentLevel = indentation.match(indentStyle).length
+      element.setIndentLevel indentation.match(indentStyle).length
 
 # previous element's parent
 
@@ -185,7 +202,7 @@ exports.treeifyElements = (root, subElements)->
   previousElement = root
 
   _.each subElements, (element)->
-    indentDifference = previousElement.indentLevel - element.indentLevel + 1
+    indentDifference = previousElement.getIndentLevel() - element.getIndentLevel() + 1
 
     throw "Indenting too far" if indentDifference < 0
 
