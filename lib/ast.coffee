@@ -32,6 +32,8 @@ class Node extends ASTNode
   map: (callback)->
     [ callback(@), _.map(@children, (child)-> child.map(callback)) ]
 
+  childrenHandlebars: -> ( child.toHandlebars() for child in @children ).join("")
+
 
 class Element extends Node
   constructor: (tagName, classesAndId, children, attributes)->
@@ -73,10 +75,8 @@ class Element extends Node
 
     attributes.unshift [attribute.getName(), attribute.getValue()] for attribute in @attributes when attribute.getName() not in ['id', 'class']
 
-    childrenHandlebars = ( child.toHandlebars() for child in @children ).join("")
-
     if @isRoot
-      childrenHandlebars = ( child.toHandlebars() for child in @children ).join("")
+      @childrenHandlebars()
     else
       attributesHTML = ( "#{name}=\"#{value}\"" for [name, value] in attributes ).join(" ")
 
@@ -84,7 +84,7 @@ class Element extends Node
       html += " " + attributesHTML if attributesHTML.length > 0
 
       html += ">"
-      html += childrenHandlebars
+      html += @childrenHandlebars()
       html += "</#{tagName}>"
 
       html
@@ -130,13 +130,18 @@ class HBContent extends ASTNode
 exports.HBContent = (args...)-> new HBContent args...
 
 
+class HBContentUnescaped extends HBContent
+  toHandlebars: -> "{{{#{@content}}}}"
+
+exports.HBContentUnescaped = (args...)-> new HBContentUnescaped args...
+
+
 class HBBlock extends Node
   constructor: (@helperMethod, @arguments, children)->
     @setChildren children
 
   toHandlebars: ->
-    childrenHandlebars = ( child.toHandlebars() for child in @children ).join("")
-    "{{##{@helperMethod} #{@arguments}}}#{childrenHandlebars}{{/#{@helperMethod}}}"
+    "{{##{@helperMethod} #{@arguments}}}#{ @childrenHandlebars() }{{/#{@helperMethod}}}"
 
 exports.HBBlock = (args...)-> new HBBlock args...
 

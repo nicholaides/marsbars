@@ -113,6 +113,25 @@ describe ".compileToHandlebars", ->
       '<html>{{some.attribute}}<div>other content</div></html>'
     ]
     [
+      'html== some.attribute'
+      '<html>{{{some.attribute}}}</html>'
+    ]
+    [
+      """
+      html
+        == some.attribute
+      """
+      '<html>{{{some.attribute}}}</html>'
+    ]
+    [
+      """
+      html
+        == some.attribute
+        div other content
+      """
+      '<html>{{{some.attribute}}}<div>other content</div></html>'
+    ]
+    [
       """
       html
         - view and arguments
