@@ -117,9 +117,8 @@ exports.Attribute = (args...)-> new Attribute args...
 
 class TextNode extends Node
   constructor: (@text)->
-
-  toHandlebars: ->
-    @text
+  toHandlebars: -> @text
+  setChildren: -> throw "Invalid AST Construction"
 
 exports.TextNode = (args...)-> new TextNode args...
 
