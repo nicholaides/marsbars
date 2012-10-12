@@ -83,12 +83,9 @@ class Element extends Node
       html = "<#{tagName}"
       html += " " + attributesHTML if attributesHTML.length > 0
 
-      if @children.length == 0
-        html += " />"
-      else
-        html += ">"
-        html += childrenHandlebars
-        html += "</#{tagName}>"
+      html += ">"
+      html += childrenHandlebars
+      html += "</#{tagName}>"
 
       html
 

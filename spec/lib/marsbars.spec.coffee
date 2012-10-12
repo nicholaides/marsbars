@@ -6,39 +6,39 @@ describe ".compileToHandlebars", ->
   examples = [
     [
       'h1'
-      '<h1 />'
+      '<h1></h1>'
     ]
     [
       'h1.main'
-      '<h1 class="main" />'
+      '<h1 class="main"></h1>'
     ]
     [
       'h1.main.expanded'
-      '<h1 class="main expanded" />'
+      '<h1 class="main expanded"></h1>'
     ]
     [
       'h1#main.expanded'
-      '<h1 id="main" class="expanded" />'
+      '<h1 id="main" class="expanded"></h1>'
     ]
     [
       'h1.main#expanded'
-      '<h1 id="expanded" class="main" />'
+      '<h1 id="expanded" class="main"></h1>'
     ]
     [
       '.main'
-      '<div class="main" />'
+      '<div class="main"></div>'
     ]
     [
       '.main.expanded'
-      '<div class="main expanded" />'
+      '<div class="main expanded"></div>'
     ]
     [
       '#main.expanded'
-      '<div id="main" class="expanded" />'
+      '<div id="main" class="expanded"></div>'
     ]
     [
       '.main#expanded'
-      '<div id="expanded" class="main" />'
+      '<div id="expanded" class="main"></div>'
     ]
     [
       '.main#expanded Text'
@@ -53,14 +53,14 @@ describe ".compileToHandlebars", ->
       html
         h1
       """
-      '<html><h1 /></html>'
+      '<html><h1></h1></html>'
     ]
     [
       """
       html
         h1.main
       """
-      '<html><h1 class="main" /></html>'
+      '<html><h1 class="main"></h1></html>'
     ]
     [
       """
@@ -87,11 +87,11 @@ describe ".compileToHandlebars", ->
 
     [
       'html(lang="en")'
-      '<html lang="en" />'
+      '<html lang="en"></html>'
     ]
     [
       'html( lang="en" version="4.0" )'
-      '<html lang="en" version="4.0" />'
+      '<html lang="en" version="4.0"></html>'
     ]
     [
       'html= some.attribute'
