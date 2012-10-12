@@ -4,24 +4,6 @@ class ASTNode
   setIndentLevel: (@_indentLevel)->
   getIndentLevel: -> @_indentLevel
 
-class Node extends ASTNode
-  setChildren: (children)->
-    @children = []
-    _.each children, (child)=> @addChild child
-    @
-
-  setIndentation: (@indentation)->
-    @indentation || ""
-    @
-
-  addChild: (child)->
-    @children.push child
-    child.setParent @
-
-  getChildren: -> @children
-
-  getIndentation: -> @indentation
-
   getParent: (n)->
     if n == 0
       @
@@ -30,6 +12,22 @@ class Node extends ASTNode
       @parent.getParent n-1
 
   setParent: (@parent)->
+
+  setIndentation: (@indentation)-> @
+  getIndentation: -> @indentation
+
+
+class Node extends ASTNode
+  setChildren: (children)->
+    @children = []
+    _.each children, (child)=> @addChild child
+    @
+
+  addChild: (child)->
+    @children.push child
+    child.setParent @
+
+  getChildren: -> @children
 
   map: (callback)->
     [ callback(@), _.map(@children, (child)-> child.map(callback)) ]
@@ -56,7 +54,7 @@ class Element extends Node
     @attributes = attributes || []
     @
 
-  getAttributes: ()-> @attributes
+  getAttributes: -> @attributes
 
   toHandlebars: ->
     tagName = @tagName || 'div'
@@ -129,12 +127,8 @@ exports.TextNode = (args...)-> new TextNode args...
 
 class HBContent extends ASTNode
   constructor: (@content)->
-  setParent: (@parent)->
-  getParent: -> @parent
-  toHandlebars: -> "{{#{@content}}}"
   map: (callback)-> callback @
-  setIndentation: (@indentation)-> @
-  getIndentation: ()-> @indentation
+  toHandlebars: -> "{{#{@content}}}"
 
 exports.HBContent = (args...)-> new HBContent args...
 
