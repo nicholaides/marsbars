@@ -37,10 +37,11 @@ class Node extends ASTNode
 
 class Element extends Node
   constructor: (tagName, classesAndId, children, attributes)->
+    @attributesAndTagHelpers = []
     @setTagName tagName
     @setChildren children
     @setClassesAndId classesAndId
-    @setAttributes attributes
+    @setAttributes attributes if attributes
 
   setIsRoot: ->
     @isRoot = true
@@ -52,37 +53,42 @@ class Element extends Node
   setTagName: (@tagName)-> @
   getTagName: -> @tagName
 
-  setAttributes: (attributes)->
-    @attributes = attributes || []
-    @
+  setAttributesAndTagHelpers: (@attributesAndTagHelpers)-> @
+  getAttributesAndTagHelpers: -> @attributesAndTagHelpers
 
-  getAttributes: -> @attributes
+  setAttributes: (attributes)->
+    @attributesAndTagHelpers.push new AttributesList(attributes)
 
   toHandlebars: ->
     tagName = @tagName || 'div'
 
+    attributesFromList = []
+    for attributeListOrTagHelper in @attributesAndTagHelpers when attributeListOrTagHelper.getAttributes?
+      for attribute in attributeListOrTagHelper.getAttributes()
+        attributesFromList.push [attribute.getName(), attribute.getValue()]
+
     attributes = []
 
     ids = []
-    ids.push classOrId.getId()    for classOrId in @classesAndId when classOrId.getId?
-    ids.push attribute.getValue() for attribute in @attributes   when attribute.getName() == 'id'
+    ids.push classOrId.getId() for classOrId in @classesAndId when classOrId.getId?
     attributes.push ['id', ids[ids.length-1]] if ids.length > 0
 
     classes = []
     classes.push classOrId.getClassName() for classOrId in @classesAndId when classOrId.getClassName?
-    classes.push attribute.getValue()     for attribute in @attributes   when attribute.getName() == 'class'
     attributes.push ['class', classes.join(' ')] if classes.length > 0
 
-    attributes.unshift [attribute.getName(), attribute.getValue()] for attribute in @attributes when attribute.getName() not in ['id', 'class']
+    for [attName, attValue] in attributesFromList
+      attributes.push [attName, attValue] unless attName in ['id', 'class']
 
     if @isRoot
       @childrenHandlebars()
     else
       attributesHTML = ( "#{name}=\"#{value}\"" for [name, value] in attributes ).join(" ")
+      tagHelpersHTML = ( helper.toTagHelperHandlebars() for helper in @attributesAndTagHelpers when helper.toTagHelperHandlebars? ).join("")
 
       html = "<#{tagName}"
-      html += " " + attributesHTML if attributesHTML.length > 0
-
+      html += " " + attributesHTML unless attributesHTML == ""
+      html += " " + tagHelpersHTML unless tagHelpersHTML == ""
       html += ">"
       html += @childrenHandlebars()
       html += "</#{tagName}>"
@@ -112,7 +118,11 @@ class Attribute
 
 exports.Attribute = (args...)-> new Attribute args...
 
+class AttributesList
+  constructor: (@attributes)->
+  getAttributes: -> @attributes
 
+exports.AttributesList = (args...)-> new AttributesList args...
 
 class TextNode extends Node
   constructor: (@text)->
@@ -129,6 +139,12 @@ class HBContent extends ASTNode
 
 exports.HBContent = (args...)-> new HBContent args...
 
+class HBTagHelper
+  constructor: (@content)->
+  toTagHelperHandlebars: -> "{{#{@content}}}"
+
+
+exports.HBTagHelper = (args...)-> new HBTagHelper args...
 
 class HBContentUnescaped extends HBContent
   toHandlebars: -> "{{{#{@content}}}}"

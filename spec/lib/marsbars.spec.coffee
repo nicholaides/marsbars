@@ -149,6 +149,13 @@ describe ".compileToHandlebars", ->
       """
       '<html>{{#if the.conditional}}<div>IF</div>{{else}}<div>ELSE</div>{{/if}}</html>'
     ]
+    [
+      """
+      html
+        div{action edit} Content
+      """
+      "<html><div {{action edit}}>Content</div></html>"
+    ]
   ]
 
   indent = (markup)->
