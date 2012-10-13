@@ -5,164 +5,229 @@ describe ".compileToHandlebars", ->
 
   examples = [
     [
-      'h1'
+      "single tag"
+      """
+      h1
+      """
       '<h1></h1>'
     ]
     [
-      'h1.main'
+      "tag with class"
+      """
+      h1.main
+      """
       '<h1 class="main"></h1>'
     ]
     [
-      'h1.main.expanded'
+      "tag with multiple classes"
+      """
+      h1.main.expanded
+      """
       '<h1 class="main expanded"></h1>'
     ]
     [
-      'h1#main.expanded'
+      "tag with id and class"
+      """
+      h1#main.expanded
+      """
       '<h1 id="main" class="expanded"></h1>'
     ]
     [
-      'h1.main#expanded'
+      "tag with class and id"
+      """
+      h1.main#expanded
+      """
       '<h1 id="expanded" class="main"></h1>'
     ]
     [
-      '.main'
+      "just a class"
+      """
+      .main
+      """
       '<div class="main"></div>'
     ]
     [
-      '.main.expanded'
+      "just multiple classes"
+      """
+      .main.expanded
+      """
       '<div class="main expanded"></div>'
     ]
     [
-      '#main.expanded'
+      "just id and class"
+      """
+      #main.expanded
+      """
       '<div id="main" class="expanded"></div>'
     ]
     [
-      '.main#expanded'
+      "just class and id"
+      """
+      .main#expanded
+      """
       '<div id="expanded" class="main"></div>'
     ]
     [
-      '.main#expanded Text'
+      "just class and id with inline content"
+      """
+      .main#expanded Text
+      """
       '<div id="expanded" class="main">Text</div>'
-    ]
-    [
-      'h1 Title'
-      '<h1>Title</h1>'
-    ]
-    [
-      """
-      html
-        h1
-      """
-      '<html><h1></h1></html>'
-    ]
-    [
-      """
-      html
-        h1.main
-      """
-      '<html><h1 class="main"></h1></html>'
-    ]
-    [
-      """
-      html
-        h1 Title
-      """
-      '<html><h1>Title</h1></html>'
-    ]
-    [
-      """
-      html
-        body
-          h1 Title
-      """
-      '<html><body><h1>Title</h1></body></html>'
-    ]
-    [
-      """
-      html
-        | Text
-      """
-      '<html>Text</html>'
     ]
 
     [
-      'html(lang="en")'
-      '<html lang="en"></html>'
+      "tag with inline content"
+      """
+      h1 Title
+      """
+      '<h1>Title</h1>'
     ]
     [
-      'html( lang="en" version="4.0" )'
-      '<html lang="en" version="4.0"></html>'
+      "nested content"
+      """
+      header
+        h1
+      """
+      '<header><h1></h1></header>'
     ]
     [
-      'html= some.attribute'
-      '<html>{{some.attribute}}</html>'
+      "nested tag w/ class"
+      """
+      header
+        h1.main
+      """
+      '<header><h1 class="main"></h1></header>'
     ]
     [
+      "nested tag w/ inline content"
       """
-      html
-        = some.attribute
+      header
+        h1 Title
       """
-      '<html>{{some.attribute}}</html>'
+      '<header><h1>Title</h1></header>'
     ]
     [
+      "nested tags 2 deep"
       """
-      html
-        = some.attribute
-        div other content
+      header
+        body
+          h1 Title
       """
-      '<html>{{some.attribute}}<div>other content</div></html>'
+      '<header><body><h1>Title</h1></body></header>'
     ]
     [
-      'html== some.attribute'
-      '<html>{{{some.attribute}}}</html>'
+      "outline content"
+      """
+      | Text
+      """
+      'Text'
     ]
     [
+      "nested outline content"
       """
-      html
-        == some.attribute
+      div
+        | Text
       """
-      '<html>{{{some.attribute}}}</html>'
+      '<div>Text</div>'
+    ]
+
+    [
+      "tag with attribute"
+      """
+      img(src="a.jpg")
+      """
+      '<img src="a.jpg"></img>'
     ]
     [
+      "tag with attributes"
       """
-      html
-        == some.attribute
-        div other content
+      img( lang="en" version="4.0" )
       """
-      '<html>{{{some.attribute}}}<div>other content</div></html>'
+      '<img lang="en" version="4.0"></img>'
     ]
     [
+      "inline HB content"
       """
-      html
-        - view and arguments
-          div contents
+      div= some.attribute
       """
-      '<html>{{#view and arguments}}<div>contents</div>{{/view}}</html>'
+      '<div>{{some.attribute}}</div>'
     ]
     [
+      "outline HB content"
       """
-      html
-        - if the.conditional
-          div IF
-        - else
-          div ELSE
+      = some.attribute
       """
-      '<html>{{#if the.conditional}}<div>IF</div>{{else}}<div>ELSE</div>{{/if}}</html>'
+      '{{some.attribute}}'
     ]
     [
+      "outline HB content w/ sibling element"
       """
-      html
-        div{action edit} Content
+      = some.attribute
+      div other content
       """
-      "<html><div {{action edit}}>Content</div></html>"
+      '{{some.attribute}}<div>other content</div>'
+    ]
+    [
+      "inline unescaped HB content"
+      """
+      div== some.attribute
+      """
+      '<div>{{{some.attribute}}}</div>'
+    ]
+    [
+      "outline unescaped HB content"
+      """
+      == some.attribute
+      """
+      '{{{some.attribute}}}'
+    ]
+    [
+      "outline unescaped HB content"
+      """
+      == some.attribute
+      div other content
+      """
+      '{{{some.attribute}}}<div>other content</div>'
+    ]
+    [
+      "block HB"
+      """
+      - view and arguments
+        div contents
+      """
+      '{{#view and arguments}}<div>contents</div>{{/view}}'
+    ]
+    [
+      "if with else"
+      """
+      - if the.conditional
+        div IF
+      - else
+        div ELSE
+      """
+      '{{#if the.conditional}}<div>IF</div>{{else}}<div>ELSE</div>{{/if}}'
+    ]
+    [
+      "tag HB helper"
+      """
+      div{action edit} Content
+      """
+      "<div {{action edit}}>Content</div>"
+    ]
+    [
+      "multiple tag HB helpers"
+      """
+      div{action edit}{bindAttr align="align"} Content
+      """
+      "<div {{action edit}}{{bindAttr align=\"align\"}}>Content</div>"
     ]
   ]
 
   indent = (markup)->
     "markup\n" + ("  " + line for line in markup.split(/\n/)).join "\n"
 
-  _.each examples, ([marsbarsMarkup, expectedHandlebarsMarkup])->
-    it "compiles #{marsbarsMarkup}", ->
+  _.each examples, ([title, marsbarsMarkup, expectedHandlebarsMarkup])->
+    it "compiles #{title}", ->
       actualHandlebarsMarkup = marsbars.compileToHandlebars indent(marsbarsMarkup)
 
       expect( actualHandlebarsMarkup ).toEqual expectedHandlebarsMarkup
