@@ -59,39 +59,49 @@ class Element extends Node
   setAttributes: (attributes)->
     @attributesAndTagHelpers.push new AttributesList(attributes)
 
-  toHandlebars: ->
-    tagName = @tagName || 'div'
+  compileTag: ->
+    tag = {}
+    tag.tagName = @tagName || 'div'
 
     attributesFromList = []
     for attributeListOrTagHelper in @attributesAndTagHelpers when attributeListOrTagHelper.getAttributes?
       for attribute in attributeListOrTagHelper.getAttributes()
         attributesFromList.push [attribute.getName(), attribute.getValue()]
 
-    attributes = []
-
     ids = []
     ids.push classOrId.getId() for classOrId in @classesAndId when classOrId.getId?
-    attributes.push ['id', ids[ids.length-1]] if ids.length > 0
+    tag.id = ids[ids.length-1] if ids.length > 0
 
     classes = []
     classes.push classOrId.getClassName() for classOrId in @classesAndId when classOrId.getClassName?
-    attributes.push ['class', classes.join(' ')] if classes.length > 0
+    tag.classes = classes
 
+    tag.attributes = []
     for [attName, attValue] in attributesFromList
-      attributes.push [attName, attValue] unless attName in ['id', 'class']
+      tag.attributes.push [attName, attValue] unless attName in ['id', 'class']
 
+    tag
+
+
+  toHandlebars: ->
     if @isRoot
       @childrenHandlebars()
     else
+      tag = @compileTag()
+
+      attributes = tag.attributes.slice()
+      attributes.unshift ['class', tag.classes.join(" ")] if tag.classes.length
+      attributes.unshift ['id', tag.id] if tag.id?
+
       attributesHTML = ( "#{name}=\"#{value}\"" for [name, value] in attributes ).join(" ")
       tagHelpersHTML = ( helper.toTagHelperHandlebars() for helper in @attributesAndTagHelpers when helper.toTagHelperHandlebars? ).join("")
 
-      html = "<#{tagName}"
+      html = "<#{tag.tagName}"
       html += " " + attributesHTML unless attributesHTML == ""
       html += " " + tagHelpersHTML unless tagHelpersHTML == ""
       html += ">"
       html += @childrenHandlebars()
-      html += "</#{tagName}>"
+      html += "</#{tag.tagName}>"
 
       html
 
