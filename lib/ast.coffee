@@ -41,7 +41,7 @@ class Element extends Node
     @setTagName tagName
     @setChildren children
     @setClassesAndId classesAndId
-    @setAttributes attributes if attributes
+    @setAttributes attributes
 
   setIsRoot: ->
     @isRoot = true
@@ -56,8 +56,9 @@ class Element extends Node
   setAttributesAndTagHelpers: (@attributesAndTagHelpers)-> @
   getAttributesAndTagHelpers: -> @attributesAndTagHelpers
 
-  setAttributes: (attributes)->
-    @attributesAndTagHelpers.push new AttributesList(attributes)
+  setAttributes: (attributes=[])->
+    @attributesAndTagHelpers.push  new AttributesList(attributes)
+    @
 
   compileTag: ->
     tag = {}
@@ -70,7 +71,7 @@ class Element extends Node
 
     ids = []
     ids.push classOrId.getId() for classOrId in @classesAndId when classOrId.getId?
-    tag.id = ids[ids.length-1] if ids.length > 0
+    tag.id = ids[ids.length-1]
 
     classes = []
     classes.push classOrId.getClassName() for classOrId in @classesAndId when classOrId.getClassName?

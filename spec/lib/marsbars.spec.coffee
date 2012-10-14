@@ -248,3 +248,7 @@ describe ".compileToHandlebars", ->
     it "parses attributes", ->
       markup = "div(align=\"left\")"
       expect( parse(markup).attributes ).toEqual [["align", "left"]]
+
+    it "doesn't parse tag helpers", ->
+      markup = "div{tagHelper}"
+      expect( (->parse markup) ).toThrow()
