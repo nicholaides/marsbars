@@ -4,13 +4,21 @@
 <script src="../dist/ember.js"></script>
 
 <script>
-  var markup = "section.class1.class2#theID\n  h1 TEST";
+  var markup = "section.class1.class2#theID\n  h1= view.title";
 
-  TestView = MarsbarsEmber.View(markup)
+  TestView1 = MarsbarsEmber.compileView(markup);
 
-  view = TestView.create();
+  MarsbarsEmber.TEMPLATES_MARKUP['test-view'] = markup;
+  TestView2 = MarsbarsEmber.getView('test-view');
+
+
+  view1 = TestView1.create({ title: "Test View 1" });
+  view2 = TestView2.create({ title: "Test View 2" });
+
 
   $(function(){
-    view.appendTo('body');
+    view1.appendTo('body');
+    view2.appendTo('body');
   });
+
 </script>
