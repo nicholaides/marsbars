@@ -25,3 +25,21 @@ guard :shell do
   end
 end
 
+guard :shell do
+  watch 'lib/ember.js' do |m|
+    file = m[0]
+    puts "Browserifying #{file}"
+    `browserify '#{file}' -o dist/ember.js`
+    p $?
+  end
+end
+
+guard :shell do
+  watch %r{^lib/(.+)\.js$} do |m|
+    file = m[0]
+    puts "Browserifying #{file}"
+    `browserify 'lib/marsbars.js' -o dist/marsbars.js`
+    p $?
+  end
+end
+

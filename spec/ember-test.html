@@ -1,0 +1,16 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="http://cloud.github.com/downloads/wycats/handlebars.js/handlebars-1.0.rc.1.js"></script>
+<script src="https://github.com/downloads/emberjs/ember.js/ember-latest.min.js"></script>
+<script src="../dist/ember.js"></script>
+
+<script>
+  var markup = "section.class1.class2#theID\n  h1 TEST";
+
+  TestView = MarsbarsEmber.View(markup)
+
+  view = TestView.create();
+
+  $(function(){
+    view.appendTo('body');
+  });
+</script>

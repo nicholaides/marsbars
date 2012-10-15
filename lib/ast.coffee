@@ -62,16 +62,14 @@ class Element extends Node
 
   compileTag: ->
     tag = {}
-    tag.tagName = @tagName || 'div'
+    tag.tagName = @tagName
 
     attributesFromList = []
     for attributeListOrTagHelper in @attributesAndTagHelpers when attributeListOrTagHelper.getAttributes?
       for attribute in attributeListOrTagHelper.getAttributes()
         attributesFromList.push [attribute.getName(), attribute.getValue()]
 
-    ids = []
-    ids.push classOrId.getId() for classOrId in @classesAndId when classOrId.getId?
-    tag.id = ids[ids.length-1]
+    tag.id = classOrId.getId() for classOrId in @classesAndId when classOrId.getId?
 
     classes = []
     classes.push classOrId.getClassName() for classOrId in @classesAndId when classOrId.getClassName?
@@ -97,7 +95,7 @@ class Element extends Node
       attributesHTML = ( "#{name}=\"#{value}\"" for [name, value] in attributes ).join(" ")
       tagHelpersHTML = ( helper.toTagHelperHandlebars() for helper in @attributesAndTagHelpers when helper.toTagHelperHandlebars? ).join("")
 
-      html = "<#{tag.tagName}"
+      html = "<#{tag.tagName || 'div'}"
       html += " " + attributesHTML unless attributesHTML == ""
       html += " " + tagHelpersHTML unless tagHelpersHTML == ""
       html += ">"
