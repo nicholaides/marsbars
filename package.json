@@ -2,8 +2,20 @@
   "name": "marsbars",
   "description": "templates",
   "version": "0.0.0",
-  "author": "mike nicholaides <mike@ablegray.com>",
-  "repository": "git://github.com/nicholaides/marsbars",
+  "author": {
+    "name": "Mike Nicholaides",
+    "email": "mike@ablegray.com",
+    "url": "http://ablegray.com"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nicholaides/marsbars"
+  },
   "dependencies": {
     "underscore": "*"
   },
@@ -11,6 +23,11 @@
     "coffee-script": "*",
     "jasmine-node":  "*",
     "pegjs": "*",
-    "browserify": "*"
+    "grunt": "*",
+    "grunt-coffee": "*",
+    "grunt-browserify": "*",
+    "grunt-exec": "*",
+    "grunt-jasmine-node": "*",
+    "grunt-clean": "*"
   }
 }
