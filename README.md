@@ -1,8 +1,10 @@
 # MarsBars
 
-## Setup
+## Installation
 
-In a script tag, include the `marsbars.js` that's in the `dist` directory. (TODO: make build system work so that these instructions work)
+To get the latest version of Marsbars, clone this repo, do `npm install` (requires Node.js and NPM) and then `grunt`. The `dist` directory will contain files ready for use.
+To use marsbars with Ember.js include `dist/ember.js` via a `<script>` tag.
+If you want to use the parser on its own use `dist/marsbars.js`
 
 ### Rails/Sprockets
 
