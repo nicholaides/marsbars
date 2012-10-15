@@ -18,7 +18,7 @@ class MarsbarsTemplate < Tilt::Template
 
   def evaluate(scope, locals, &block)
     path = scope.logical_path.gsub(/^templates\//, '')
-    "MarsbarsEmber.TEMPLATES[#{path.to_json}] = #{data.to_json};"
+    "MarsbarsEmber.TEMPLATES_MARKUP[#{path.to_json}] = #{data.to_json};"
   end
 end
 ```
