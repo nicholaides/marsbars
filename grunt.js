@@ -12,8 +12,21 @@ module.exports = function(grunt) {
       files: ['grunt.js']
     },
     watch: {
-      files: '<config:lint.files>',
-      tasks: 'lint test'
+      coffee: {
+        files: '<config:coffee.app.src>',
+        tasks: 'coffee',
+        options: { debounceDelay: 1000 }
+      },
+      grammar: {
+        files: 'lib/**/*.pegjs',
+        tasks: 'exec:compile_grammar',
+        options: { debounceDelay: 1000 }
+      },
+      specs: {
+        files: 'build/**/*.js',
+        tasks: 'jasmine_node',
+        options: { debounceDelay: 1000 }
+      }
     },
 
     clean: {
