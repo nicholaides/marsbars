@@ -88,6 +88,8 @@ class Element extends Node
     else
       tag = @compileTag()
 
+      tagName = tag.tagName || 'div'
+
       attributes = tag.attributes.slice()
       attributes.unshift ['class', tag.classes.join(" ")] if tag.classes.length
       attributes.unshift ['id', tag.id] if tag.id?
@@ -95,12 +97,12 @@ class Element extends Node
       attributesHTML = ( "#{name}=\"#{value}\"" for [name, value] in attributes ).join(" ")
       tagHelpersHTML = ( helper.toTagHelperHandlebars() for helper in @attributesAndTagHelpers when helper.toTagHelperHandlebars? ).join("")
 
-      html = "<#{tag.tagName || 'div'}"
+      html = "<#{tagName}"
       html += " " + attributesHTML unless attributesHTML == ""
       html += " " + tagHelpersHTML unless tagHelpersHTML == ""
       html += ">"
       html += @childrenHandlebars()
-      html += "</#{tag.tagName}>"
+      html += "</#{tagName}>"
 
       html
 
