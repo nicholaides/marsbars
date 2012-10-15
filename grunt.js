@@ -4,7 +4,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-exec');
   grunt.loadNpmTasks('grunt-clean');
-  grunt.loadNpmTasks('grunt-jasmine-node');
 
   // Project configuration.
   grunt.initConfig({
@@ -23,13 +22,7 @@ module.exports = function(grunt) {
       specs: {
         files: 'build/**/*.js',
         tasks: 'exec:jasmine_node',
-        // tasks: 'exec:rerun_specs',
-        // tasks: 'jasmine_node',
       },
-      rerun_specs: {
-        files: 'build/spec/rerun.txt',
-        tasks: 'jasmine_node',
-      }
     },
 
     clean: {
@@ -71,26 +64,13 @@ module.exports = function(grunt) {
         command: 'pegjs lib/marsbars.pegjs build/lib/marsbars.parser.js'
       },
 
-      rerun_specs: {
-        command: 'date > build/spec/rerun.txt'
-      },
-
       jasmine_node: {
         command: 'jasmine-node --test-dir build/spec 2>&1',
         stdout: true,
       }
     },
-
-    jasmine_node: {
-      spec: "./build/spec",
-      projectRoot: "./build",
-      requirejs: false,
-      forceExit: true,
-    }
-
   });
 
   // Default task.
-  grunt.registerTask('default', 'clean coffee exec:compile_grammar browserify jasmine_node');
-
+  grunt.registerTask('default', 'clean coffee exec:compile_grammar exec:jasmine_node browserify');
 };
