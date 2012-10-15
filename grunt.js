@@ -61,14 +61,7 @@ module.exports = function(grunt) {
       projectRoot: ".",
       requirejs: false,
       forceExit: true,
-      jUnit: {
-        report: false,
-        savePath : "./build/reports/jasmine/",
-        useDotNotation: true,
-        consolidate: true
-      }
     }
-
 
   });
 
