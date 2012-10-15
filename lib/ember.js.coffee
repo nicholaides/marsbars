@@ -11,5 +11,5 @@ window.MarsbarsEmber = window.MBE =
       tagName:    tag.tagName
       classNames: tag.classes
 
-  getView: (templateName)->
+  View: (templateName)->
     MBE.compileView MBE.TEMPLATES_MARKUP[templateName]
