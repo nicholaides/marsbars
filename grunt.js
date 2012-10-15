@@ -15,17 +15,20 @@ module.exports = function(grunt) {
       coffee: {
         files: '<config:coffee.app.src>',
         tasks: 'coffee',
-        options: { debounceDelay: 1000 }
       },
       grammar: {
         files: 'lib/**/*.pegjs',
         tasks: 'exec:compile_grammar',
-        options: { debounceDelay: 1000 }
       },
       specs: {
         files: 'build/**/*.js',
+        tasks: 'exec:jasmine_node',
+        // tasks: 'exec:rerun_specs',
+        // tasks: 'jasmine_node',
+      },
+      rerun_specs: {
+        files: 'build/spec/rerun.txt',
         tasks: 'jasmine_node',
-        options: { debounceDelay: 1000 }
       }
     },
 
@@ -66,12 +69,21 @@ module.exports = function(grunt) {
     exec: {
       compile_grammar: {
         command: 'pegjs lib/marsbars.pegjs build/lib/marsbars.parser.js'
+      },
+
+      rerun_specs: {
+        command: 'date > build/spec/rerun.txt'
+      },
+
+      jasmine_node: {
+        command: 'jasmine-node --test-dir build/spec 2>&1',
+        stdout: true,
       }
     },
 
     jasmine_node: {
       spec: "./build/spec",
-      projectRoot: ".",
+      projectRoot: "./build",
       requirejs: false,
       forceExit: true,
     }
