@@ -13,15 +13,11 @@ module.exports = function(grunt) {
     watch: {
       coffee: {
         files: '<config:coffee.app.src>',
-        tasks: 'coffee',
+        tasks: 'coffee exec:jasmine_node',
       },
       grammar: {
         files: 'lib/**/*.pegjs',
-        tasks: 'exec:compile_grammar',
-      },
-      specs: {
-        files: 'build/**/*.js',
-        tasks: 'exec:jasmine_node',
+        tasks: 'exec:compile_grammar exec:jasmine_node',
       },
     },
 
