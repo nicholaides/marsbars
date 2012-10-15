@@ -12,7 +12,7 @@ section.user
   .twitter= view.twitter_handle
 ```
 
-```coffee
+```javascript
 App.UserView = MarsbarsEmber.View('user_view').extend({ // assumes a template named 'test-view'
   // ... normal view stuff
   // tagName already set to "section"
