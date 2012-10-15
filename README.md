@@ -6,6 +6,8 @@ In a script tag, include the `marsbars.js` that's in the `dist` directory. (TODO
 
 ### Rails/Sprockets
 
+You can serve `.marsbars` files from your javascripts directory. The following setup assumes you'll have your templates in the `templates` directory (i.e. if you're using Rails, that's `app/assets/javascripts/templates`).
+
 For Rails/Rack apps, you'll need this class:
 
 ```ruby
