@@ -13,7 +13,7 @@ Every Marsbars template must have exactly 1 root element. This element is specia
 
 Take this template as an example (`user_view.marsbars`):
 
-```
+```jade
 section.user#current-user
   .name John
   .twitter @johnstamos
@@ -39,7 +39,7 @@ The `App.UserView` gets from the Marsbars template a `tagName` of `section`, `cl
 
 `h1 About Us` => `<h1>About Us</h1>`
 
-```html
+```jade
 p
   | We are
   | really nice
@@ -54,7 +54,7 @@ becomes
 
 Marsbars uses significant whitespace (GASP!!) for nesting elements. It is spaces/tabs agnostic. Whichever style you use for your first indented line is what is used for the rest of the template. Example:
 
-```
+```jade
 ul
   li Home
   li About Us
@@ -87,7 +87,7 @@ becomes
 
 `= view App.UserView contentBinding="user"` => `{{view App.UserView contentBinding="user"}}`
 
-```
+```jade
 - if view.isActive
   .active
 - else
@@ -102,7 +102,7 @@ becomes
 {{/if}}
 ```
 
-```
+```jade
 - each item in list
   = item
 ```
@@ -113,12 +113,12 @@ becomes
 {{/each}}
 ```
 
-```
+```jade
 - view App.UserView contentBinding="user"
   = name
 ```
 becomes
-```Handlebars
+```handlebars
 {{#view App.UserView contentBinding="user"}}
   {{name}}
 {{/view}}
