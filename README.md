@@ -37,8 +37,10 @@ The `App.UserView` gets from the Marsbars template a `tagName` of `section`, `cl
 
 ### Text
 
+#### Inline
 `h1 About Us` => `<h1>About Us</h1>`
 
+#### Outline (?)
 ```jade
 p
   | We are
@@ -87,6 +89,8 @@ becomes
 
 `= view App.UserView contentBinding="user"` => `{{view App.UserView contentBinding="user"}}`
 
+### Conditionals
+
 ```jade
 - if view.isActive
   .active
@@ -102,6 +106,7 @@ becomes
 {{/if}}
 ```
 
+#### Block helpers (like `each`)
 ```jade
 - each item in list
   = item
@@ -113,6 +118,8 @@ becomes
 {{/each}}
 ```
 
+#### More block helpers (like `view`)
+
 ```jade
 - view App.UserView contentBinding="user"
   = name
@@ -123,6 +130,8 @@ becomes
   {{name}}
 {{/view}}
 ```
+
+#### Tag helpers (like `bindAttr` and `action`)
 
 `button{bindAttr disabled="cantPost"} Post` => `<button {{bindAttr disabled="cantPost"}}>Post</button>`
 
