@@ -2,8 +2,8 @@
 
 Marsbars is a templating language for Handlebars/Ember.js in the spirit of Haml and Jade. It has 2 important benefits:
 
-1) Less extraneous markup.
-2) HTML tag names, classes, and id's of the Em.View class definitions go in the template, where they belong.
+1. Less extraneous markup.
+2. HTML tag names, classes, and id's of the Em.View class definitions go in the template, where they belong.
 
 ## Syntax
 
@@ -128,7 +128,7 @@ becomes
 
 `a(rel="next"){action showNext} next` => `<a rel="next" {{action showNext}}>next</a>`
 
-coming soon: `img( src={user.imageUrl} height="100" )` => `<img height="100" {{bindAttr src="user.imageUrl"}}>
+coming soon: `img( src={user.imageUrl} height="100" )` => `<img height="100" {{bindAttr src="user.imageUrl"}}>`
 
 
 
