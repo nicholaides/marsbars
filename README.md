@@ -1,24 +1,136 @@
 # MarsBars
 
-## Using with Ember.js
+Marsbars is a templating language for Handlebars/Ember.js. It has 2 important benefits:
 
-Marsbars creates Em.View classes that automatically set up their `tagName`, `classNames`, and `elementId` properties based on the root element of your template.
+1) Less extraneous markup and in the spirit of Haml and Jade.
+2) Taking HTML tag names, classes, and id's off of the Em.View class definitions and putting them back in the template where they belong.
 
-`user_view.marsbars`:
+## Syntax
+
+### Root Element
+
+Every Marsbars template must have exactly 1 root element. This element is special in that its tag name, classes and id are assigned to the view that uses the template. Root elements cannot have Handlebars helpers, like `bindAttr` and `action` (yet).
+
+Take this template as an example (`user_view.marsbars`):
+
 ```
-section.user
-
-  .name= name
-  .twitter= view.twitter_handle
+section.user#current-user
+  .name John
+  .twitter @johnstamos
 ```
+
+and this view that uses the template:
 
 ```javascript
-App.UserView = MarsbarsEmber.View('user_view').extend({ // assumes a template named 'test-view'
+App.UserView = MarsbarsEmber.View('user_view').extend({
   // ... normal view stuff
-  // tagName already set to "section"
-  // classNames already set to ['user']
 })
 ```
+
+The `App.UserView` gets from the Marsbars template a `tagName` of `section`, `classNames` of `['user']` and `elementId` of `current-user`.
+
+### Tag names, classes and ids and attributes
+
+`img.logo#main-logo(src="company.png" height="100")` => `<img class="logo" id="main-logo" src="company.png" height="100">`
+
+`.bookmark` => `<div class="bookmark"></div>`
+
+### Text
+
+`h1 About Us` => `<h1>About Us</h1>`
+
+```html
+p
+  | We are
+  | really nice
+  img(src="smiley.png")
+```
+
+becomes
+
+`<p>We are really nice <img src="smiley.png"></p>`
+
+### Indentation
+
+Marsbars uses significant whitespace (GASP!!) for nesting elements. It is spaces/tabs agnostic. Whichever style you use for your first indented line is what is used for the rest of the template. Example:
+
+```
+ul
+  li Home
+  li About Us
+    ul
+      li Our Vision
+  li Disclaimer
+```
+
+becomes
+
+```html
+<ul>
+  <li>Home</li>
+  <li>
+    <ul>
+      <li>Our Vision</li>
+    </ul>
+  </li>
+  <li>Disclaimer</li>
+</ul>
+```
+
+### Dynamic Content
+
+`= name` => `{{name}}`
+
+`== name` => `{{{name}}}`
+
+`.user= name` => `<div class="user">{{name}}</div>`
+
+`= view App.UserView contentBinding="user"` => `{{view App.UserView contentBinding="user"}}`
+
+```
+- if view.isActive
+  .active
+- else
+  .inactive
+```
+becomes
+```handlebars
+{{#if view.isActive}}
+  <div class="active"></div>
+{{else}}
+  <div class="inactive"></div>
+{{/if}}
+```
+
+```
+- each item in list
+  = item
+```
+becomes
+```handlebars
+{{#each item in list}}
+  {{item}}
+{{/each}}
+```
+
+```
+- view App.UserView contentBinding="user"
+  = name
+```
+becomes
+```Handlebars
+{{#view App.UserView contentBinding="user"}}
+  {{name}}
+{{/view}}
+```
+
+`button{bindAttr disabled="cantPost"} Post` => `<button {{bindAttr disabled="cantPost"}}>Post</button>`
+
+`a(rel="next"){action showNext} next` => `<a rel="next" {{action showNext}}>next</a>`
+
+coming soon: `img( src={user.imageUrl} height="100" )` => `<img height="100" {{bindAttr src="user.imageUrl"}}>
+
+
 
 ## Installation
 
