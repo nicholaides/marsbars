@@ -128,7 +128,7 @@ becomes
 
 `a(rel="next"){action showNext} next` => `<a rel="next" {{action showNext}}>next</a>`
 
-coming soon: `img( src={user.imageUrl} height="100" )` => `<img height="100" {{bindAttr src="user.imageUrl"}}>
+coming soon: `img( src={user.imageUrl} height="100" )` => `<img height="100" {{bindAttr src="user.imageUrl"}}>`
 
 
 
