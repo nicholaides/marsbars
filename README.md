@@ -1,9 +1,9 @@
 # MarsBars
 
-Marsbars is a templating language for Handlebars/Ember.js. It has 2 important benefits:
+Marsbars is a templating language for Handlebars/Ember.js in the spirit of Haml and Jade. It has 2 important benefits:
 
-1) Less extraneous markup and in the spirit of Haml and Jade.
-2) Taking HTML tag names, classes, and id's off of the Em.View class definitions and putting them back in the template where they belong.
+1) Less extraneous markup.
+2) HTML tag names, classes, and id's of the Em.View class definitions go in the template, where they belong.
 
 ## Syntax
 
